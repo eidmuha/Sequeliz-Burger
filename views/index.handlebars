@@ -1,0 +1,38 @@
+
+<div class="container bg-light">
+   
+<h4><b>Eat-Da-Burgers!</b></h4>
+<hr>
+
+{{#each burgers}}
+{{#unless devoured}}
+{{> burgers/burger-blocks devoured=true}}
+{{/unless}}
+{{/each}}
+<hr>
+
+
+<form class="form-eatDa">
+
+    <div class="input-group">
+        <input type="text" class="form-control" id="burger_input">
+        <span class="input-group-btn">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                <img src="https://myrealdomain.com/images/burger-animated-gif-3.gif" width="50" /> <b>Eat-Da</b>
+            </button>
+        </span>
+    </div>
+
+</form>
+
+<hr>
+{{#each burgers}}
+{{#if devoured}}
+{{> burgers/burger_devoured_block devoured=true}}
+{{/if}}
+{{/each}}
+
+
+</div>
+
+{{> footer}}
