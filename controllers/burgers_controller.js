@@ -1,47 +1,91 @@
+// *********************************************************************************
+// api-routes.js - this file offers a set of routes for displaying and saving data to the db
+// *********************************************************************************
+
+// Dependencies
+// =============================================================
+
+// Requiring our Todo model
+var db = require("../models");
 var express = require("express");
 var router = express.Router();
 
-// Import the model (burger.js) to use its database functions.
-var burger = require("../modals/burger")
+// Routes
+// =============================================================
+// module.exports = function() {
 
-// Create all our routes and set up logic within those routes where required.
-router.get("/", function(req, res) {
-    burger.selectAll(function(data) {
-      var hbsObject = {
-        title: "Home Page",
-        burgers: data
-      };
-      res.render("index", hbsObject);
-    });
+  // GET route for getting all of the posts
+  router.get("/", function(req, res) {
+    // console.log("req.body", req.body)
+    db.Burger.findAll({})
+      .then(function(dbBurger) {
+        // console.log(dbBurger)
+        console.log(">>>>>>>>>>>>>> ", dbBurger)
+
+        res.render("index", {burgers: dbBurger});
+      });
   });
 
-  router.post("/api/burgers", function(req, res) {
-    
-    burger.insertOne([
-      "burger_name"
-    ], [
-      req.body.burger_name
-    ], function(result) {
-      // Send back the ID of the new quote
-      res.json({ id: result.insertId });
-    });
-  });
-  
-  router.put("/api/burgers/:id", function(req, res) {
+  // // Get route for returning posts of a specific category
+  // router.get("/api/posts/category/:category", function(req, res) {
+  //   db.Burger.findAll({
+  //     where: {
+  //       category: req.params.category
+  //     }
+  //   })
+  //     .then(function(dbPost) {
+  //       res.render("index",dbPost);
+  //     });
+  // });
 
-    var condition = "id = " + req.params.id;
-  
-    burger.updateOne({
-      devoured: req.body.devoured
-    }, condition, function(result) {
-      if (result.changedRows == 0) {
-        // If no rows were changed, then the ID must not exist, so 404
-        return res.status(404).end();
-      } else {
-        res.status(200).end();
+  // Get route for retrieving a single post
+  router.get("/api/posts/:id", function(req, res) {
+    db.Burger.findOne({
+      where: {
+        id: req.params.id
       }
-    });
+    })
+      .then(function(dbPost) {
+        res.json(dbPost);
+      });
   });
-  
-  // Export routes for server.js to use.
-  module.exports = router;
+
+  // POST route for saving a new post
+  router.post("/api/burgers", function(req, res) {
+    // console.log(req.body);
+    db.Burger.create({
+      burger_name: req.body.burger_name
+    })
+      .then(function(dbPost) {
+        res.json(dbPost);
+      });
+  });
+
+  // DELETE route for deleting posts
+  // app.delete("/api/posts/:id", function(req, res) {
+  //   db.Post.destroy({
+  //     where: {
+  //       id: req.params.id
+  //     }
+  //   })
+  //     .then(function(dbPost) {
+  //       res.json(dbPost);
+  //     });
+  // });
+
+  // PUT route for updating posts
+  router.put("/api/burgers/:id", function(req, res) {
+    console.log("=============================::::::: ",req.body.devoured)
+    db.Burger.update(req.body,
+      {
+        where: {
+          id: req.params.id
+        }
+      })
+      .then(function(dbPost) {
+        console.log("++++++++++++++++", dbPost)
+        res.json(dbPost);
+      });
+  });
+// };
+module.exports = router;

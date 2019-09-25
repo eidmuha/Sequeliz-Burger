@@ -2,9 +2,12 @@
 USE burgers_db;
 
 -- Creating table
+
 CREATE TABLE burgers(
     id INT NOT NULL AUTO_INCREMENT,
     burger_name VARCHAR(50) NOT NULL,
     devoured BOOLEAN DEFAULT false,
+    createdAt DATE DEFAULT NULL,
+    updatedAt DATE DEFAULT NULL,
     PRIMARY KEY (id)
 )
